@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import PostModal from "./components/postModal";
 import { deleteFilm, getFilm } from "./services/filmService";
 import { MainContext } from "./components/containerMain";
 import updated from "./utils/update";
 import EditModal from "./components/editModal";
+import Loading from "react-loading";
 
 function App() {
     const [films, setFilms] = useState([]);
     const [showModalPost, setShowModalPost] = useState(false);
     const [id, setId] = useState();
+    const [btn, setBtn] = useState(false);
     const [showModalEdit, setShowModalEdit] = useState(false);
 
     const { update, setUpdate } = MainContext();
@@ -22,8 +24,10 @@ function App() {
     }, [update]);
 
     const deleteHandle = async (id) => {
+        setBtn(true);
         await deleteFilm(id);
         updated(setUpdate);
+        setBtn(false);
     };
 
     return (
@@ -49,7 +53,8 @@ function App() {
                                     className="flex gap-2 shadow-md px-3 py-2 rounded-md bg-slate-300 transition hover:scale-95 "
                                 >
                                     <img
-                                        src={`http://localhost:3001/uploads/${film.cover}`}
+                                        src={`https://sdasaa.s3.us-east-2.amazonaws.com/${film.cover}`}
+                                        // src="https://sdasaa.s3.us-east-2.amazonaws.com/code-snapshot.png"
                                         alt="sda"
                                         className="w-[7rem] aspect-[9/16] object-cover rounded-sm"
                                     />
@@ -78,12 +83,20 @@ function App() {
                                                 Edit
                                             </button>
                                             <button
-                                                onClick={() =>
-                                                    deleteHandle(film.id)
-                                                }
-                                                className="bg-red-500 w-14 rounded-sm p-1 font-bold text-white"
+                                                onClick={(e) => {
+                                                    deleteHandle(film.id);
+                                                }}
+                                                disabled={btn}
+                                                className="bg-red-500 w-14 rounded-sm p-1 font-bold text-white grid place-content-center"
                                             >
-                                                Hapus
+                                                {btn ? (
+                                                    <Loading
+                                                        type="spin"
+                                                        className="scale-50 "
+                                                    />
+                                                ) : (
+                                                    "Hapus"
+                                                )}
                                             </button>
                                         </section>
                                     </section>

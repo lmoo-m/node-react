@@ -3,6 +3,7 @@ import InputForm from "../formInput";
 import axios from "axios";
 import updated from "../../utils/update";
 import { MainContext } from "../containerMain";
+import Loading from "react-loading";
 
 function PostModal({ setShow }) {
     const [title, setTitle] = useState("");
@@ -11,6 +12,7 @@ function PostModal({ setShow }) {
     const [distributor, setDistributor] = useState("");
     const [date, setDate] = useState("");
     const [file, setFile] = useState("");
+    const [btn, setBtn] = useState(false);
 
     const { setUpdate } = MainContext();
 
@@ -21,6 +23,7 @@ function PostModal({ setShow }) {
     });
 
     const handleSubmit = async () => {
+        setBtn(true);
         const form = new FormData();
 
         form.append("cover", file);
@@ -33,6 +36,7 @@ function PostModal({ setShow }) {
         const response = await axios.post("http://localhost:3001/film", form);
         updated(setUpdate);
         setShow(false);
+        setBtn(false);
     };
 
     return (
@@ -105,10 +109,15 @@ function PostModal({ setShow }) {
                         />
                     </section>
                     <button
-                        className="mt-2 p-2 bg-blue-500 w-full text-white rounded-sm"
+                        className="mt-2 p-2 bg-blue-500 w-full text-white rounded-sm h-[2.6rem] grid place-content-center"
+                        disabled={btn}
                         onClick={() => handleSubmit()}
                     >
-                        Tambah
+                        {btn ? (
+                            <Loading type="spin" className="scale-50 " />
+                        ) : (
+                            "Tambah"
+                        )}
                     </button>
                 </section>
             </section>

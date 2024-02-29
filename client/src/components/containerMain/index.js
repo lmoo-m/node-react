@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 
-const Main = createContext();
+export const Main = createContext();
 
 export const MainContainer = ({ children }) => {
     const [update, setUpdate] = useState(0);

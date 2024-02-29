@@ -1,5 +1,7 @@
+import { deleteImage, sendImage } from "../libs/s3/s3Service.js";
 import film from "../models/filmModel.js";
 import response from "../utils/response/response.js";
+import { v4 as uuid } from "uuid";
 
 export const getFilm = async (req, res) => {
     try {
@@ -39,6 +41,10 @@ export const addFilm = async (req, res) => {
         if (!(title, director, release_date, language, distributor)) {
             return response(res, false, "wajib mengisi semua field");
         }
+        const nameImage = uuid() + image.originalname;
+
+        const resa = await sendImage("sdasaa", nameImage, image);
+        console.log(resa.RequestCharged);
 
         const result = await film.create({
             title,
@@ -46,7 +52,7 @@ export const addFilm = async (req, res) => {
             release_date,
             language,
             distributor,
-            cover: image.filename,
+            cover: nameImage,
         });
 
         return response(res, true, "film berhasil ditambahkan", result);
@@ -94,6 +100,8 @@ export const deleteFilm = async (req, res) => {
         if (!selectFilm) {
             return response(res, false, "film tidak ditemukan");
         }
+        const s3res = await deleteImage(selectFilm.cover);
+        console.log(s3res);
 
         const result = await selectFilm.destroy();
         return response(res, true, "data film berhasil dihapus", result);

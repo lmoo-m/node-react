@@ -1,5 +1,5 @@
 import { Router } from "express";
-import multer from "multer";
+import image from "../libs/multer/multerService.js";
 import {
     addFilm,
     deleteFilm,
@@ -9,24 +9,6 @@ import {
 } from "../controllers/filmController.js";
 
 const route = Router();
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "./uploads/");
-    },
-    filename: (req, file, cb) => {
-        cb(
-            null,
-            `${Date.now()}-${Math.floor(Math.random() * 999)}-${
-                file.originalname
-            }`
-        );
-    },
-});
-
-const image = multer({
-    storage,
-});
 
 route.get("/film", getFilm);
 route.get("/film/:id", getFilmById);
