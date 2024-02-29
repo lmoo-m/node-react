@@ -31,10 +31,12 @@ export const getFilmById = async (req, res) => {
 
 export const addFilm = async (req, res) => {
     try {
-        const { title, director, release_date, language, distributor, cover } =
+        const { title, director, release_date, language, distributor } =
             req.body;
 
-        if (!(title, director, release_date, language, distributor, cover)) {
+        const image = req.file;
+
+        if (!(title, director, release_date, language, distributor)) {
             return response(res, false, "wajib mengisi semua field");
         }
 
@@ -44,7 +46,7 @@ export const addFilm = async (req, res) => {
             release_date,
             language,
             distributor,
-            cover,
+            cover: image.filename,
         });
 
         return response(res, true, "film berhasil ditambahkan", result);
