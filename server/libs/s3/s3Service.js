@@ -7,8 +7,8 @@ import sharp from "sharp";
 
 const s3 = new S3Client({
     credentials: {
-        accessKeyId: "AKIAU6GDZ3T4HMXS5KWA",
-        secretAccessKey: "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",
+        accessKeyId: "AKIAU6GDZ3T4BISUSK63",
+        secretAccessKey: "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",
     },
     region: "us-east-2",
 });
@@ -34,9 +34,9 @@ export const sendImage = async (bucket, nameObject, image) => {
     return result;
 };
 
-export const deleteImage = async (nameObject) => {
+export const deleteImage = async (bucket, nameObject) => {
     const command = new DeleteObjectCommand({
-        Bucket: "sdasaa",
+        Bucket: bucket,
         Key: nameObject,
     });
 

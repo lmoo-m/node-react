@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import PostModal from "./components/postModal";
 import { deleteFilm, getFilm } from "./services/filmService";
@@ -42,7 +42,7 @@ function App() {
                 >
                     Tambah
                 </button>
-                <section className="gap-2 mt-5 grid grid-cols-3">
+                <section className="gap-2 mt-5 grid lg:grid-cols-3 ">
                     {!films ? (
                         <h1>tidak ada data</h1>
                     ) : (
@@ -50,10 +50,10 @@ function App() {
                             return (
                                 <div
                                     key={i}
-                                    className="flex gap-2 shadow-md px-3 py-2 rounded-md bg-slate-300 transition hover:scale-95 "
+                                    className="flex gap-2 shadow-md   px-3 py-2 rounded-md bg-slate-300 transition hover:scale-95 "
                                 >
                                     <img
-                                        src={`https://sdasaa.s3.us-east-2.amazonaws.com/${film.cover}`}
+                                        src={`https://testanod.s3.us-east-2.amazonaws.com/${film.cover}`}
                                         // src="https://sdasaa.s3.us-east-2.amazonaws.com/code-snapshot.png"
                                         alt="sda"
                                         className="w-[7rem] aspect-[9/16] object-cover rounded-sm"
@@ -83,7 +83,7 @@ function App() {
                                                 Edit
                                             </button>
                                             <button
-                                                onClick={(e) => {
+                                                onClick={() => {
                                                     deleteHandle(film.id);
                                                 }}
                                                 disabled={btn}

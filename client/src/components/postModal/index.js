@@ -4,6 +4,7 @@ import axios from "axios";
 import updated from "../../utils/update";
 import { MainContext } from "../containerMain";
 import Loading from "react-loading";
+import { IoCloudUploadOutline } from "react-icons/io5";
 
 function PostModal({ setShow }) {
     const [title, setTitle] = useState("");
@@ -13,6 +14,7 @@ function PostModal({ setShow }) {
     const [date, setDate] = useState("");
     const [file, setFile] = useState("");
     const [btn, setBtn] = useState(false);
+    const [preview, setPreview] = useState("");
 
     const { setUpdate } = MainContext();
 
@@ -50,64 +52,98 @@ function PostModal({ setShow }) {
                         Kembali
                     </button>
                 </section>
+
                 <section>
-                    <InputForm
-                        id={"judul"}
-                        setValue={setTitle}
-                        value={title}
-                        label={"Judul"}
-                        placeholder={"Judul..."}
-                    />
-                    <InputForm
-                        id={"sutradata"}
-                        setValue={setDirector}
-                        value={director}
-                        label={"Sutradata"}
-                        placeholder={"sutradara..."}
-                    />
-                    <InputForm
-                        id={"bahas"}
-                        setValue={setLanguage}
-                        value={language}
-                        label={"Bahasa"}
-                        placeholder={"bahasa..."}
-                    />
-                    <InputForm
-                        id={"distributor"}
-                        setValue={setDistributor}
-                        value={distributor}
-                        label={"Distributor"}
-                        placeholder={"distributor..."}
-                    />
-                    <section className="mt-2">
-                        <label
-                            htmlFor={"tanggal"}
-                            className="font-semibold text-lg cursor-pointer"
-                        >
-                            Tanggal
-                        </label>
-                        <input
-                            type="date"
-                            onChange={(e) => setDate(e.target.value)}
-                            id="tanggal"
-                            className="w-full p-2 rounded-sm shadow-md"
-                        />
+                    <section className="flex gap-5">
+                        <div>
+                            <InputForm
+                                id={"judul"}
+                                setValue={setTitle}
+                                value={title}
+                                label={"Judul"}
+                                placeholder={"Judul..."}
+                            />
+                            <InputForm
+                                id={"sutradata"}
+                                setValue={setDirector}
+                                value={director}
+                                label={"Sutradata"}
+                                placeholder={"sutradara..."}
+                            />
+                            <InputForm
+                                id={"bahas"}
+                                setValue={setLanguage}
+                                value={language}
+                                label={"Bahasa"}
+                                placeholder={"bahasa..."}
+                            />
+                            <InputForm
+                                id={"distributor"}
+                                setValue={setDistributor}
+                                value={distributor}
+                                label={"Distributor"}
+                                placeholder={"distributor..."}
+                            />
+                            <section className="mt-2">
+                                <label
+                                    htmlFor={"tanggal"}
+                                    className="font-semibold text-lg cursor-pointer"
+                                >
+                                    Tanggal
+                                </label>
+                                <input
+                                    type="date"
+                                    onChange={(e) => setDate(e.target.value)}
+                                    id="tanggal"
+                                    className="w-full p-2 rounded-sm shadow-md"
+                                />
+                            </section>
+                        </div>
+
+                        <section className="mt-2 w-1/2">
+                            <label
+                                htmlFor={"foto"}
+                                className="font-semibold text-lg cursor-pointer "
+                            >
+                                <div className="shadow-xl border-dashed border-2 border-black w-full h-full max-h-full  grid place-content-center rounded-md text-4xl text-center p-5">
+                                    {preview ? (
+                                        <img
+                                            src={preview}
+                                            className="h-[21rem] w-full object-contain"
+                                        />
+                                    ) : (
+                                        <>
+                                            <span className="grid place-content-center">
+                                                <IoCloudUploadOutline />
+                                            </span>
+                                            <p className="text-md font-semibold">
+                                                Upload Cover
+                                            </p>
+                                        </>
+                                    )}
+                                </div>
+                            </label>
+                            <input
+                                type="file"
+                                onChange={(e) => {
+                                    try {
+                                        const prev = URL.createObjectURL(
+                                            e.target.files[0]
+                                        );
+                                        setPreview(prev);
+                                        setFile(e.target.files[0]);
+                                    } catch {
+                                        return;
+                                    }
+                                }}
+                                accept="image/*"
+                                hidden
+                                id="foto"
+                                className="w-full p-2 rounded-sm shadow-md"
+                            />
+                        </section>
                     </section>
-                    <section className="mt-2">
-                        <label
-                            htmlFor={"tanggal"}
-                            className="font-semibold text-lg cursor-pointer"
-                        >
-                            Foto
-                        </label>
-                        <input
-                            type="file"
-                            onChange={(e) => setFile(e.target.files[0])}
-                            accept="image/*"
-                            id="tanggal"
-                            className="w-full p-2 rounded-sm shadow-md"
-                        />
-                    </section>
+
                     <button
                         className="mt-2 p-2 bg-blue-500 w-full text-white rounded-sm h-[2.6rem] grid place-content-center"
                         disabled={btn}

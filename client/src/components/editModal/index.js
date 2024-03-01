@@ -4,6 +4,9 @@ import axios from "axios";
 import updated from "../../utils/update";
 import { MainContext } from "../containerMain";
 import { getFilmById } from "../../services/filmService";
+import { IoCloudUploadOutline } from "react-icons/io5";
+import Loading from "react-loading";
+import env from "../../utils/environment";
 
 function EditModal({ setShow, id }) {
     const [user, setUser] = useState({});
@@ -14,6 +17,8 @@ function EditModal({ setShow, id }) {
     const [distributor, setDistributor] = useState("");
     const [date, setDate] = useState("");
     const [file, setFile] = useState("");
+    const [btn, setBtn] = useState(false);
+    const [preview, setPreview] = useState("");
 
     const { setUpdate } = MainContext();
 
@@ -25,9 +30,15 @@ function EditModal({ setShow, id }) {
 
     useEffect(() => {
         getFilmById(id).then((res) => {
-            setTitle(res.data.title);
+            const { data } = res.data;
+
+            setTitle(data.title);
+            setDirector(data.director);
+            setLanguage(data.language);
+            setDistributor(data.distributor);
+            setDate(data.release_date);
+            setPreview(data.cover);
         });
-        console.log(title);
     }, []);
     const handleSubmit = async () => {
         const form = new FormData();
@@ -55,69 +66,112 @@ function EditModal({ setShow, id }) {
                         Kembali
                     </button>
                 </section>
+
                 <section>
-                    <InputForm
-                        id={"judul"}
-                        setValue={setTitle}
-                        value={title}
-                        label={"Judul"}
-                        placeholder={"Judul..."}
-                    />
-                    <InputForm
-                        id={"sutradata"}
-                        setValue={setDirector}
-                        value={director}
-                        label={"Sutradata"}
-                        placeholder={"sutradara..."}
-                    />
-                    <InputForm
-                        id={"bahas"}
-                        setValue={setLanguage}
-                        value={language}
-                        label={"Bahasa"}
-                        placeholder={"bahasa..."}
-                    />
-                    <InputForm
-                        id={"distributor"}
-                        setValue={setDistributor}
-                        value={distributor}
-                        label={"Distributor"}
-                        placeholder={"distributor..."}
-                    />
-                    <section className="mt-2">
-                        <label
-                            htmlFor={"tanggal"}
-                            className="font-semibold text-lg cursor-pointer"
-                        >
-                            Tanggal
-                        </label>
-                        <input
-                            type="date"
-                            onChange={(e) => setDate(e.target.value)}
-                            id="tanggal"
-                            className="w-full p-2 rounded-sm shadow-md"
-                        />
+                    <section className="flex gap-5">
+                        <div>
+                            <InputForm
+                                id={"judul"}
+                                setValue={setTitle}
+                                value={title}
+                                label={"Judul"}
+                                placeholder={"Judul..."}
+                            />
+                            <InputForm
+                                id={"sutradata"}
+                                setValue={setDirector}
+                                value={director}
+                                label={"Sutradata"}
+                                placeholder={"sutradara..."}
+                            />
+                            <InputForm
+                                id={"bahas"}
+                                setValue={setLanguage}
+                                value={language}
+                                label={"Bahasa"}
+                                placeholder={"bahasa..."}
+                            />
+                            <InputForm
+                                id={"distributor"}
+                                setValue={setDistributor}
+                                value={distributor}
+                                label={"Distributor"}
+                                placeholder={"distributor..."}
+                            />
+                            <section className="mt-2">
+                                <label
+                                    htmlFor={"tanggal"}
+                                    className="font-semibold text-lg cursor-pointer"
+                                >
+                                    Tanggal
+                                </label>
+                                <input
+                                    type="date"
+                                    onChange={(e) => setDate(e.target.value)}
+                                    id="tanggal"
+                                    className="w-full p-2 rounded-sm shadow-md"
+                                />
+                            </section>
+                        </div>
+
+                        <section className="mt-2 w-1/2">
+                            <label
+                                htmlFor={"foto"}
+                                className="font-semibold text-lg cursor-pointer "
+                            >
+                                <div className="shadow-xl border-dashed border-2 border-black w-full h-full max-h-full  grid place-content-center rounded-md text-4xl text-center p-5">
+                                    {preview ? (
+                                        <img
+                                            src={
+                                                env.base_url_image +
+                                                "/" +
+                                                preview
+                                            }
+                                            className="h-[21rem] w-full object-contain"
+                                        />
+                                    ) : (
+                                        <>
+                                            <span className="grid place-content-center">
+                                                <IoCloudUploadOutline />
+                                            </span>
+                                            <p className="text-md font-semibold">
+                                                Upload Cover
+                                            </p>
+                                        </>
+                                    )}
+                                </div>
+                            </label>
+                            <input
+                                type="file"
+                                onChange={(e) => {
+                                    try {
+                                        const prev = URL.createObjectURL(
+                                            e.target.files[0]
+                                        );
+                                        setPreview(prev);
+                                        setFile(e.target.files[0]);
+                                    } catch {
+                                        return;
+                                    }
+                                }}
+                                accept="image/*"
+                                hidden
+                                id="foto"
+                                className="w-full p-2 rounded-sm shadow-md"
+                            />
+                        </section>
                     </section>
-                    <section className="mt-2">
-                        <label
-                            htmlFor={"tanggal"}
-                            className="font-semibold text-lg cursor-pointer"
-                        >
-                            Foto
-                        </label>
-                        <input
-                            type="file"
-                            onChange={(e) => setFile(e.target.files[0])}
-                            accept="image/*"
-                            id="tanggal"
-                            className="w-full p-2 rounded-sm shadow-md"
-                        />
-                    </section>
+
                     <button
-                        className="mt-2 p-2 bg-blue-500 w-full text-white rounded-sm"
+                        className="mt-2 p-2 bg-blue-500 w-full text-white rounded-sm h-[2.6rem] grid place-content-center"
+                        disabled={btn}
                         onClick={() => handleSubmit()}
                     >
-                        Tambah
+                        {btn ? (
+                            <Loading type="spin" className="scale-50 " />
+                        ) : (
+                            "Tambah"
+                        )}
                     </button>
                 </section>
             </section>
