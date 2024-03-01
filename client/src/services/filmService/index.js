@@ -10,6 +10,11 @@ export const getFilmById = async (id) => {
     return data;
 };
 
+export const postFilm = async (data) => {
+    const result = await serviceAxios.post("/film", data);
+    return result;
+};
+
 export const deleteFilm = async (id) => {
     const data = await serviceAxios.delete(`/film/${id}`);
     return data;

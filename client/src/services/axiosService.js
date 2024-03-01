@@ -1,7 +1,8 @@
 import axios from "axios";
+import env from "../utils/environment";
 
 const serviceAxios = axios.create({
-    baseURL: "http://localhost:3001",
+    baseURL: env.api_url,
 });
 
 export default serviceAxios;

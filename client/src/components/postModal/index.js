@@ -5,6 +5,7 @@ import updated from "../../utils/update";
 import { MainContext } from "../containerMain";
 import Loading from "react-loading";
 import { IoCloudUploadOutline } from "react-icons/io5";
+import { postFilm } from "../../services/filmService";
 
 function PostModal({ setShow }) {
     const [title, setTitle] = useState("");
@@ -35,10 +36,11 @@ function PostModal({ setShow }) {
         form.append("release_date", convertDate);
         form.append("director", director);
 
-        const response = await axios.post("http://localhost:3001/film", form);
-        updated(setUpdate);
-        setShow(false);
-        setBtn(false);
+        postFilm(form).then((res) => {
+            updated(setUpdate);
+            setShow(false);
+            setBtn(false);
+        });
     };
 
     return (
