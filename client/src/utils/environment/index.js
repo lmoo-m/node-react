@@ -1,5 +1,5 @@
 const env = {
-    api_url: "http://localhost:3001",
+    api_url: "http://3.138.244.59/api/",
     base_url_image: "https://testanod.s3.us-east-2.amazonaws.com",
 };
 
