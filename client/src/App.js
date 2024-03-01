@@ -5,7 +5,10 @@ import { deleteFilm, getFilm } from "./services/filmService";
 import { MainContext } from "./components/containerMain";
 import updated from "./utils/update";
 import EditModal from "./components/editModal";
-import Loading from "react-loading";
+import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
+import { toast, ToastContainer } from "react-toastify";
+import convertDate from "./utils/convertDate";
 
 function App() {
     const [films, setFilms] = useState([]);
@@ -24,33 +27,52 @@ function App() {
     }, [update]);
 
     const deleteHandle = async (id) => {
-        setBtn(true);
-        await deleteFilm(id);
-        updated(setUpdate);
-        setBtn(false);
+        Swal.fire({
+            text: "Yakin Hapus Film ini?",
+            showCancelButton: true,
+        }).then(async (res) => {
+            if (res.isConfirmed) {
+                setBtn(true);
+                await toast.promise(deleteFilm(id), {
+                    pending: "Sedang Menghapus Film",
+                    success: "Film Berhasil Dihapus",
+                    error: "Film gagal dihapus",
+                });
+                updated(setUpdate);
+                setBtn(false);
+            }
+        });
     };
 
     return (
         <div className="App border mx-auto h-screen flex justify-center">
-            {showModalPost && <PostModal setShow={setShowModalPost} />}
-            {showModalEdit && <EditModal setShow={setShowModalEdit} id={id} />}
+            {showModalPost && (
+                <PostModal setShow={setShowModalPost} toast={toast} />
+            )}
+            {showModalEdit && (
+                <EditModal setShow={setShowModalEdit} toast={toast} id={id} />
+            )}
+            <ToastContainer position="bottom-right" />
             <main className="w-5/6">
-                <h1 className="mt-5 text-2xl font-semibold">test</h1>
-                <button
-                    className="bg-blue-500 text-white rounded-md py-1 px-2 mt-2"
-                    onClick={() => setShowModalPost(!showModalPost)}
-                >
-                    Tambah
-                </button>
+                <section className="pb-2 border-b">
+                    <h1 className="mt-5 text-2xl font-semibold">FilmGroup</h1>
+                    <button
+                        className="bg-blue-500 text-white rounded-md py-1 px-2 mt-2"
+                        onClick={() => setShowModalPost(!showModalPost)}
+                    >
+                        Tambah
+                    </button>
+                </section>
                 <section className="gap-2 mt-5 grid lg:grid-cols-3 ">
                     {!films ? (
                         <h1>tidak ada data</h1>
                     ) : (
                         films?.map((film, i) => {
+                            const date = convertDate(film.release_date);
                             return (
                                 <div
                                     key={i}
-                                    className="flex gap-2 shadow-md   px-3 py-2 rounded-md bg-slate-300 transition hover:scale-95 "
+                                    className="flex gap-2 shadow-md capitalize px-3 py-2 rounded-md bg-slate-300 transition hover:scale-95 "
                                 >
                                     <img
                                         src={`https://testanod.s3.us-east-2.amazonaws.com/${film.cover}`}
@@ -63,7 +85,7 @@ function App() {
                                             {film.title}
                                         </h2>
                                         <section className="mt-1 ">
-                                            <p>Tayang : {film.release_date}</p>
+                                            <p>Tayang : {date}</p>
                                             <p>Sutradara : {film.director}</p>
                                             <p>Bahasa : {film.language}</p>
                                             <p>
@@ -89,14 +111,7 @@ function App() {
                                                 disabled={btn}
                                                 className="bg-red-500 w-14 rounded-sm p-1 font-bold text-white grid place-content-center"
                                             >
-                                                {btn ? (
-                                                    <Loading
-                                                        type="spin"
-                                                        className="scale-50 "
-                                                    />
-                                                ) : (
-                                                    "Hapus"
-                                                )}
+                                                Hapus
                                             </button>
                                         </section>
                                     </section>

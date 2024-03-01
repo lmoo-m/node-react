@@ -2,13 +2,14 @@ import {
     S3Client,
     PutObjectCommand,
     DeleteObjectCommand,
+    GetObjectCommand,
 } from "@aws-sdk/client-s3";
 import sharp from "sharp";
 
 const s3 = new S3Client({
     credentials: {
-        accessKeyId: "AKIAU6GDZ3T4BISUSK63",
-        secretAccessKey: "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",
+        accessKeyId: "AKIAU6GDZ3T4HNAP4NGK",
+        secretAccessKey: "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",
     },
     region: "us-east-2",
 });

@@ -13,7 +13,7 @@ const route = Router();
 route.get("/film", getFilm);
 route.get("/film/:id", getFilmById);
 route.post("/film", image.single("cover"), addFilm);
-route.patch("/film/:id", editFilm);
+route.patch("/film/:id", image.single("cover"), editFilm);
 route.delete("/film/:id", deleteFilm);
 
 export default route;

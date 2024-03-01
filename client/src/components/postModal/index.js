@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import InputForm from "../formInput";
-import axios from "axios";
+import { TbArrowBackUp } from "react-icons/tb";
 import updated from "../../utils/update";
 import { MainContext } from "../containerMain";
 import Loading from "react-loading";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { postFilm } from "../../services/filmService";
 
-function PostModal({ setShow }) {
+function PostModal({ setShow, toast }) {
     const [title, setTitle] = useState("");
     const [director, setDirector] = useState("");
     const [language, setLanguage] = useState("");
@@ -19,12 +19,6 @@ function PostModal({ setShow }) {
 
     const { setUpdate } = MainContext();
 
-    const convertDate = new Date(date).toLocaleDateString("id", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-    });
-
     const handleSubmit = async () => {
         setBtn(true);
         const form = new FormData();
@@ -33,13 +27,14 @@ function PostModal({ setShow }) {
         form.append("title", title);
         form.append("language", language);
         form.append("distributor", distributor);
-        form.append("release_date", convertDate);
+        form.append("release_date", date);
         form.append("director", director);
 
         postFilm(form).then((res) => {
             updated(setUpdate);
             setShow(false);
             setBtn(false);
+            toast.success("Film berhasil Upload");
         });
     };
 
@@ -48,10 +43,10 @@ function PostModal({ setShow }) {
             <section className="bg-slate-100 w-1/2 rounded-md shadow-xl p-4 relative">
                 <section>
                     <button
-                        className="bg-red-500 p-1 rounded-sm text-white"
+                        className="bg-red-500 p-1 rounded-sm text-white flex items-center gap-2"
                         onClick={() => setShow(false)}
                     >
-                        Kembali
+                        <TbArrowBackUp size={"1.4rem"} />
                     </button>
                 </section>
 
@@ -110,6 +105,7 @@ function PostModal({ setShow }) {
                                 <div className="shadow-xl border-dashed border-2 border-black w-full h-full max-h-full  grid place-content-center rounded-md text-4xl text-center p-5">
                                     {preview ? (
                                         <img
+                                            alt="preview"
                                             src={preview}
                                             className="h-[21rem] w-full object-contain"
                                         />

@@ -15,6 +15,11 @@ export const postFilm = async (data) => {
     return result;
 };
 
+export const editFilm = async (id, data) => {
+    const result = await serviceAxios.patch(`/film/${id}`, data);
+    return result;
+};
+
 export const deleteFilm = async (id) => {
     const data = await serviceAxios.delete(`/film/${id}`);
     return data;

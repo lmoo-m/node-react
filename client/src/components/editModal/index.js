@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
 import InputForm from "../formInput";
-import axios from "axios";
 import updated from "../../utils/update";
 import { MainContext } from "../containerMain";
-import { getFilmById } from "../../services/filmService";
+import { editFilm, getFilmById } from "../../services/filmService";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import Loading from "react-loading";
 import env from "../../utils/environment";
+import { TbArrowBackUp } from "react-icons/tb";
 
-function EditModal({ setShow, id }) {
-    const [user, setUser] = useState({});
-
+function EditModal({ setShow, toast, id }) {
     const [title, setTitle] = useState("");
     const [director, setDirector] = useState("");
     const [language, setLanguage] = useState("");
@@ -21,12 +19,6 @@ function EditModal({ setShow, id }) {
     const [preview, setPreview] = useState("");
 
     const { setUpdate } = MainContext();
-
-    const convertDate = new Date(date).toLocaleDateString("id", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-    });
 
     useEffect(() => {
         getFilmById(id).then((res) => {
@@ -43,14 +35,19 @@ function EditModal({ setShow, id }) {
     const handleSubmit = async () => {
         const form = new FormData();
 
-        form.append("cover", file);
+        form.append("cover", file ? file : preview);
         form.append("title", title);
         form.append("language", language);
         form.append("distributor", distributor);
-        form.append("release_date", convertDate);
+        form.append("release_date", date);
         form.append("director", director);
 
-        const response = await axios.post("http://localhost:3001/film", form);
+        await toast.promise(editFilm(id, form), {
+            pending: "Sedang Mengedit Film",
+            success: "Film Berhasil Diedit",
+            error: "Film gagal diedit",
+        });
+
         updated(setUpdate);
         setShow(false);
     };
@@ -63,7 +60,7 @@ function EditModal({ setShow, id }) {
                         className="bg-red-500 p-1 rounded-sm text-white"
                         onClick={() => setShow(false)}
                     >
-                        Kembali
+                        <TbArrowBackUp size={"1.4rem"} />
                     </button>
                 </section>
 
@@ -109,6 +106,7 @@ function EditModal({ setShow, id }) {
                                     type="date"
                                     onChange={(e) => setDate(e.target.value)}
                                     id="tanggal"
+                                    value={date}
                                     className="w-full p-2 rounded-sm shadow-md"
                                 />
                             </section>
@@ -123,9 +121,11 @@ function EditModal({ setShow, id }) {
                                     {preview ? (
                                         <img
                                             src={
-                                                env.base_url_image +
-                                                "/" +
-                                                preview
+                                                preview.includes("blob")
+                                                    ? preview
+                                                    : env.base_url_image +
+                                                      "/" +
+                                                      preview
                                             }
                                             className="h-[21rem] w-full object-contain"
                                         />
@@ -170,7 +170,7 @@ function EditModal({ setShow, id }) {
                         {btn ? (
                             <Loading type="spin" className="scale-50 " />
                         ) : (
-                            "Tambah"
+                            "Edit"
                         )}
                     </button>
                 </section>

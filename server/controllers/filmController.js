@@ -64,7 +64,7 @@ export const addFilm = async (req, res) => {
 export const editFilm = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, director, release_date, language, distributor, cover } =
+        const { title, director, release_date, language, distributor } =
             req.body;
 
         const selectFilm = await film.findOne({ where: { id } });
@@ -73,8 +73,24 @@ export const editFilm = async (req, res) => {
             return response(res, false, "film tidak ditemukan");
         }
 
-        if (!(title, director, release_date, language, distributor, cover)) {
-            return response(res, false, "wajib mengisi semua field");
+        // if (!(title, director, release_date, language, distributor)) {
+        //     return response(res, false, "wajib mengisi semua field");
+        // }
+
+        const image = req.file;
+        if (image) {
+            const nameImage = uuid() + image.originalname;
+            await sendImage("testanod", nameImage, image);
+            await deleteImage("testanod", selectFilm.cover);
+            const result = await selectFilm.update({
+                title,
+                director,
+                release_date,
+                language,
+                distributor,
+                cover: nameImage,
+            });
+            return response(res, true, "film berhasil diedit", result);
         }
 
         const result = await selectFilm.update({
@@ -83,7 +99,6 @@ export const editFilm = async (req, res) => {
             release_date,
             language,
             distributor,
-            cover,
         });
 
         return response(res, true, "film berhasil diedit", result);
