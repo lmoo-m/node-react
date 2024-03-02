@@ -31,10 +31,14 @@ function PostModal({ setShow, toast }) {
         form.append("director", director);
 
         postFilm(form).then((res) => {
-            updated(setUpdate);
-            setShow(false);
+            if (res.data.status) {
+                updated(setUpdate);
+                setShow(false);
+                setBtn(false);
+                toast.success("Film berhasil Upload");
+            }
+            toast.error(res.data.msg);
             setBtn(false);
-            toast.success("Film berhasil Upload");
         });
     };
 

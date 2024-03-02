@@ -33,6 +33,7 @@ function EditModal({ setShow, toast, id }) {
         });
     }, []);
     const handleSubmit = async () => {
+        setBtn(true);
         const form = new FormData();
 
         form.append("cover", file ? file : preview);
@@ -42,14 +43,19 @@ function EditModal({ setShow, toast, id }) {
         form.append("release_date", date);
         form.append("director", director);
 
-        await toast.promise(editFilm(id, form), {
+        const p = await toast.promise(editFilm(id, form), {
             pending: "Sedang Mengedit Film",
-            success: "Film Berhasil Diedit",
-            error: "Film gagal diedit",
         });
 
-        updated(setUpdate);
-        setShow(false);
+        if (p.data.status) {
+            updated(setUpdate);
+            setShow(false);
+            setBtn(false);
+            toast.success("Film berhasil diedit");
+        } else {
+            setBtn(false);
+            toast.error(p.data.msg);
+        }
     };
 
     return (
