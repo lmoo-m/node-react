@@ -10,6 +10,8 @@ import Swal from "sweetalert2";
 import { toast, ToastContainer } from "react-toastify";
 import convertDate from "./utils/convertDate";
 import env from "./utils/environment";
+import { AnimatePresence, motion } from "framer-motion";
+import { MdDarkMode, MdLightMode } from "react-icons/md";
 
 function App() {
     const [films, setFilms] = useState([]);
@@ -17,6 +19,7 @@ function App() {
     const [id, setId] = useState();
     const [btn, setBtn] = useState(false);
     const [showModalEdit, setShowModalEdit] = useState(false);
+    const [dark, setDark] = useState(false);
 
     const { update, setUpdate } = MainContext();
 
@@ -46,23 +49,59 @@ function App() {
     };
 
     return (
-        <div className="App border mx-auto h-screen flex justify-center">
-            {showModalPost && (
-                <PostModal setShow={setShowModalPost} toast={toast} />
-            )}
-            {showModalEdit && (
-                <EditModal setShow={setShowModalEdit} toast={toast} id={id} />
-            )}
+        <div
+            className={`App mx-auto h-screen flex justify-center ${
+                dark ? "bg-slate-700 text-white" : ""
+            } transition`}
+        >
+            <AnimatePresence>
+                {showModalPost && (
+                    <PostModal setShow={setShowModalPost} toast={toast} />
+                )}
+            </AnimatePresence>
+            <AnimatePresence>
+                {showModalEdit && (
+                    <EditModal
+                        setShow={setShowModalEdit}
+                        toast={toast}
+                        id={id}
+                    />
+                )}
+            </AnimatePresence>
+
             <ToastContainer position="bottom-right" />
             <main className="w-5/6">
-                <section className="pb-2 border-b">
-                    <h1 className="mt-5 text-2xl font-semibold">FilmGroup</h1>
-                    <button
-                        className="bg-blue-500 text-white rounded-md py-1 px-2 mt-2"
-                        onClick={() => setShowModalPost(!showModalPost)}
-                    >
-                        Tambah
-                    </button>
+                <section className="pb-2 border-b flex justify-between mt-5">
+                    <div>
+                        <h1 className="text-2xl font-semibold ">FilmGroup</h1>
+                        <button
+                            className="bg-blue-500 text-white rounded-md py-1 px-2 mt-2"
+                            onClick={() => setShowModalPost(!showModalPost)}
+                        >
+                            Tambah
+                        </button>
+                    </div>
+                    <div>
+                        <motion.button
+                            className={`border-2 ${
+                                dark ? "border-white" : "border-slate-700"
+                            } w-14 h-6 rounded-xl`}
+                            onClick={() => setDark(!dark)}
+                        >
+                            <motion.div
+                                animate={{ x: dark ? "100%" : "0" }}
+                                className={`w-1/2 rounded-full grid place-content-center ${
+                                    dark ? "bg-white" : "bg-slate-700"
+                                } h-full`}
+                            >
+                                {dark ? (
+                                    <MdLightMode className="text-yellow-400" />
+                                ) : (
+                                    <MdDarkMode className="text-white" />
+                                )}
+                            </motion.div>
+                        </motion.button>
+                    </div>
                 </section>
                 <section className="gap-2 mt-5 grid lg:grid-cols-3 ">
                     {!films ? (
@@ -73,7 +112,7 @@ function App() {
                             return (
                                 <div
                                     key={i}
-                                    className="flex gap-2 shadow-md capitalize px-3 py-2 rounded-md bg-slate-300 transition hover:scale-95 "
+                                    className="flex gap-2 text-black shadow-md capitalize px-3 py-2 rounded-md bg-slate-300 transition hover:scale-95 "
                                 >
                                     <img
                                         src={`${env.base_url_image}/${film.cover}`}

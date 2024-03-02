@@ -6,6 +6,7 @@ import { MainContext } from "../containerMain";
 import Loading from "react-loading";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { postFilm } from "../../services/filmService";
+import { motion } from "framer-motion";
 
 function PostModal({ setShow, toast }) {
     const [title, setTitle] = useState("");
@@ -44,8 +45,27 @@ function PostModal({ setShow, toast }) {
     };
 
     return (
-        <div className="absolute bg-slate-400/50 w-full h-full top-0 flex justify-center items-center">
-            <section className="bg-slate-100 w-1/2 rounded-md shadow-xl p-4 relative">
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute text-black bg-slate-400/50 w-full h-full top-0 flex justify-center items-center"
+        >
+            <motion.section
+                className="bg-slate-100 w-1/2 rounded-md shadow-xl p-4 relative"
+                animate={{
+                    top: 0,
+                    opacity: 1,
+                }}
+                initial={{
+                    top: -100,
+                    opacity: 0,
+                }}
+                exit={{
+                    top: -100,
+                    opacity: 0,
+                }}
+            >
                 <section>
                     <button
                         className="bg-red-500 p-1 rounded-sm text-white flex items-center gap-2"
@@ -159,8 +179,8 @@ function PostModal({ setShow, toast }) {
                         )}
                     </button>
                 </section>
-            </section>
-        </div>
+            </motion.section>
+        </motion.div>
     );
 }
 

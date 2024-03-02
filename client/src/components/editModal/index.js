@@ -7,6 +7,7 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 import Loading from "react-loading";
 import env from "../../utils/environment";
 import { TbArrowBackUp } from "react-icons/tb";
+import { motion } from "framer-motion";
 
 function EditModal({ setShow, toast, id }) {
     const [title, setTitle] = useState("");
@@ -59,8 +60,18 @@ function EditModal({ setShow, toast, id }) {
     };
 
     return (
-        <div className="absolute bg-slate-400/50 w-full h-full top-0 flex justify-center items-center z-50">
-            <section className="bg-slate-100 w-1/2 rounded-md shadow-xl p-4 relative">
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute text-black bg-slate-400/50 w-full h-full top-0 flex justify-center items-center z-50"
+        >
+            <motion.section
+                initial={{ opacity: 0, top: -100 }}
+                animate={{ opacity: 1, top: 0 }}
+                exit={{ opacity: 0, top: -100 }}
+                className="bg-slate-100 w-1/2 rounded-md shadow-xl p-4 relative"
+            >
                 <section>
                     <button
                         className="bg-red-500 p-1 rounded-sm text-white"
@@ -180,8 +191,8 @@ function EditModal({ setShow, toast, id }) {
                         )}
                     </button>
                 </section>
-            </section>
-        </div>
+            </motion.section>
+        </motion.div>
     );
 }
 
