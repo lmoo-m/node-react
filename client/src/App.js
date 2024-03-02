@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 import { toast, ToastContainer } from "react-toastify";
 import convertDate from "./utils/convertDate";
+import env from "./utils/environment";
 
 function App() {
     const [films, setFilms] = useState([]);
@@ -75,7 +76,7 @@ function App() {
                                     className="flex gap-2 shadow-md capitalize px-3 py-2 rounded-md bg-slate-300 transition hover:scale-95 "
                                 >
                                     <img
-                                        src={`https://testanod.s3.us-east-2.amazonaws.com/${film.cover}`}
+                                        src={`${env.base_url_image}/${film.cover}`}
                                         // src="https://sdasaa.s3.us-east-2.amazonaws.com/code-snapshot.png"
                                         alt="sda"
                                         className="w-[7rem] aspect-[9/16] object-cover rounded-sm"

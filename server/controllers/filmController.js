@@ -43,7 +43,7 @@ export const addFilm = async (req, res) => {
         }
         const nameImage = uuid() + image.originalname;
 
-        const resa = await sendImage("testanod", nameImage, image);
+        const resa = await sendImage("s3-lks", nameImage, image);
         console.log(resa.RequestCharged);
 
         const result = await film.create({

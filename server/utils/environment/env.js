@@ -3,10 +3,10 @@ dotenv.config();
 
 const env = {
     port: process.env.PORT,
-    host: process.env.HOST,
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE,
+    host: "database-lks.cxysa6ueqoz3.us-east-2.rds.amazonaws.com",
+    user: "admin",
+    password: "admin123",
+    database: "film",
 };
 
 export default env;

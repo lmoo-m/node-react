@@ -8,8 +8,8 @@ import sharp from "sharp";
 
 const s3 = new S3Client({
     credentials: {
-        accessKeyId: "AKIAU6GDZ3T4HNAP4NGK",
-        secretAccessKey: "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",
+        accessKeyId: "AKIAU6GDZ3T4GKIBXGOB",
+        secretAccessKey: "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",
     },
     region: "us-east-2",
 });
