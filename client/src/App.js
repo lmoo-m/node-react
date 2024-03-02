@@ -50,7 +50,7 @@ function App() {
 
     return (
         <div
-            className={`App mx-auto h-screen flex justify-center ${
+            className={`App mx-auto min-h-screen flex justify-center  ${
                 dark ? "bg-slate-700 text-white" : ""
             } transition`}
         >
