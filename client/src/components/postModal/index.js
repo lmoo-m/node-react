@@ -36,6 +36,7 @@ function PostModal({ setShow, toast }) {
                 setShow(false);
                 setBtn(false);
                 toast.success("Film berhasil Upload");
+                return;
             }
             toast.error(res.data.msg);
             setBtn(false);
